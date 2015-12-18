@@ -29,9 +29,9 @@ The fewer unique commands the better. The fewer nested commands the more-better;
    * may also be XP based, must spend XP to initiate the timer
  * attacks, defends, and other actions may be madlib'able by each player
    * eg. : 
-     * !q setname bloodninja
-     * !q setattack casts lvl.9999999 lightning bolt
-     * !q setdefend I put on my hat and wizard robe
+     * `!q setname bloodninja`
+     * `!q setattack casts lvl.9999999 lightning bolt`
+     * `!q setdefend I put on my hat and wizard robe`
    * this opens up the option of having bots act as 'Player' to create monsters, saves a shitton of coding and complexity in this project
      * second project would be config-driven bot Monsters, might need is_monster flag in this project though for some logic
  * Stats are as follows:  *(this will and must change)*
