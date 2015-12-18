@@ -47,7 +47,7 @@ The fewer unique commands the better. The fewer nested commands the more-better;
      * increases ranged attack and reduces enemy def
    * END
      * increases health, damage
-     * health = 20 + lvl*2 + END*2
+     * health = 20 + lvl\*2 + END\*2
 
 lvl  | END | health  
 ------------ | -------|------
@@ -59,7 +59,7 @@ lvl  | END | health
 20   |20   | 100     
 50   |100  | 320     
 100  |100  | 420  
-           
+
    * CHR
      * no fucking clue yet
      * increases gold? xp? 
