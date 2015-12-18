@@ -22,21 +22,24 @@ class func(object):
     def test(self, target, msg):
         self.bot.privmsg(target, msg)
 
+    def set_target(self, target):
+        self.target = target
+
     def toggle_active(self, nick, is_active):
             user = self.get_or_create_user(nick)
             user.is_active=is_active
             user.save()
-            self.bot.privmsg(THE_CHANNEL, "toggled nick: "+nick+", to: "+str(user.is_active))
+            self.bot.privmsg(self.target, "toggled nick: "+nick+", to: "+str(user.is_active))
 
 
     def get_or_create_user(self, nick): 
         # self.bot.privmsg(target, msg)grandma = Person.get(Person.name == 'Grandma L.')
         try:  
             temp = User.get(User.username == nick)
-            self.bot.privmsg("THE_CHANNEL", "found nick: "+nick)
+            self.bot.privmsg(self.target, "found nick: "+nick)
         except: 
-            temp = User.create(username=nick, attack=1, defense=1, health=100)
-            self.bot.privmsg(THE_CHANNEL, "created nick: "+nick)
+            temp = User.create(username=nick, attack=1, defense=1, health=100, is_active=True)
+            self.bot.privmsg(self.target, "created nick: "+nick)
             temp.save
 
         return temp
@@ -51,17 +54,17 @@ class func(object):
         ret_val = "dummy"
         try:  
             temp = User.get(User.username == victim)
-            # self.bot.privmsg(THE_CHANNEL, "found victim: "+victim)
+            # self.bot.privmsg(self.target, "found victim: "+victim)
             if temp.is_active:
                 ret_val = victim
         except: 
             pass
-            # self.bot.privmsg(THE_CHANNEL, "no such victim: "+victim+", using dummy.")
+            # self.bot.privmsg(self.target, "no such victim: "+victim+", using dummy.")
 
         if ret_val is "dummy":
-            self.bot.privmsg(THE_CHANNEL, "no such victim: "+victim+", using dummy.")
+            self.bot.privmsg(self.target, "no such victim: "+victim+", using dummy.")
         else:
-            self.bot.privmsg(THE_CHANNEL, "found victim: "+victim)
+            self.bot.privmsg(self.target, "found victim: "+victim)
 
         return ret_val
 

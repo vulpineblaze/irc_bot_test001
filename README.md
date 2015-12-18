@@ -50,7 +50,7 @@ The fewer unique commands the better. The fewer nested commands the more-better;
      * health = 20 + lvl\*2 + END\*2
 
 lvl  | END | health  
------------- | -------|------
+-----|-----|------
 1    |1    | 24      
 2    |2    |  28     
 5    |5    | 20      
@@ -73,15 +73,51 @@ lvl  | END | health
      * increases gold, crit
 
  * Fighting algorithm now:
-   * Ad6 - Dd6 , where A dn D are attack and defense
+   * min( 1, Ad6 - Dd6 ) , where A and D are attack and defense
    * so A of 5 and D of 6 would become  5d6 - 6d6  , or  (5 to 30)  minus (6 to 36)
+
  * Fighting algorithm could be:
    * min( 1, attack - defense )
    * attack =  (STR|PER)d6 + AGI + crit
      * nothing an enemy has reduces your attack
-   * crit = min( 0 , LCKd6^2 - LCKd6^2)
+   * crit = min( 0 , (LCKd6)^2 - (LCKd6)^2)
      * 50% chance of zero, sliding chance of exponential
    * defense = enemy.ENDd6 + enemy.AGI - PERd6
      * your PER reduces enemy defense
+     * this makes the game offense-heavy, but im ok with that
+
+ * Equipment might be cool, but there are no plans to implement
+   * Complicates everything. Might prefer this to be flavor-text only.
+   * attack + "My massive enhanced rocket-powered flaming mini-nuke mjornir of burninateing does 1 damage..."
+   * melee vs ranged? just a flag? keyword driven?
+     * parse for keywords, tally, and decide? have result output in stats, so Players know
+ * skills might be cool, but no plan to implement
+   * same as equipment, only worse.
+   * could be limited to effect + flavor-text
+   * attack + "I cast lvl.99999999 Magic Missile for 1 damage...", now you have spells
+   * heal as negative attack? temporary stat-boost skill? 
+ * Death can occur, but isnt implemented
+   * dead Players should'nt be able to attack, be victim, level up, etc..
+     * make sure dying is un-fun, something to be avoided
+   * need a way to revive, continue playing
+     * rez one per hour/day/week ?
+     * command-based cost? auto-deduct gold? loss of xp, levels, stats?
+ * health exists, but there is no way to regenerate it
+   * free potions? find potions? buy potions?
+   * free health every hour/day/week?
+     * command based on timer, or passive
+   * combat healing skill? mana? gold? xp?  
+ * health vs dying
+   * dying is not just 0 health, you have to un-do the death
+   * avoid dying; more than just "oh my health is low, lawl whatev"
+
+ * admin command only does reload right now
+   * should be able to manipulate any part of any Players anything
+   * maybe even change say_hi and good_bye messages?
+   * die command? 
+
+ * monster commands
+   * monster bots will need access to specialized admin-esque commands, to respawn and whatnot
+   * implement a new command, `!monster` , check is_monster flag, hide from `!help` list
 
 

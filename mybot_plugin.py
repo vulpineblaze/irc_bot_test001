@@ -82,7 +82,11 @@ class Plugin(object):
             %%admin <words>...
         """ 
         rcvd = ' '.join(args['<words>'])
-        msg = " Command received : " + rcvd
+        if not target:
+            target = mask.nick
+        if target == self.bot.nick:
+            target = mask.nick
+        msg = " Command received : " + rcvd + ", from: "+target
         self.bot.privmsg(target, msg)
         if rcvd == "reload":
             self.bot.privmsg(target, " ... Will now reload the bot!")
@@ -110,7 +114,12 @@ class Plugin(object):
         # msg += " target : "+target
         # msg += " words : ".join(args['<words>'])
         # msg += "\n"
+        self.func.set_target(target)
+        
         user = self.func.get_or_create_user(mask.nick)
+        if not user.is_active:
+            user.is_active=True
+            user.save()
 
         rcvd = ' '.join(args['<words>'])
         if rcvd == "stats":
@@ -118,7 +127,7 @@ class Plugin(object):
             msg += " | attack: "+str(user.attack)
             msg += " | defense: "+str(user.defense)
             msg += " | health: "+str(user.health)
-            self.bot.privmsg(target, msg)
+            self.bot.privmsg(mask.nick, msg)
 
         elif "attack" in rcvd:
             victim = self.func.parse_victim(rcvd)
