@@ -16,6 +16,8 @@ I'd rather have a simple front end and a complex back end, than a simple backend
 
 The fewer unique commands the better. The fewer nested commands the more-better; OR better yet, not at all.  
 
+Joke-Theme: Make enough of the text configurable such that this game could be MLP themed. 
+
 #### Function Requirements:  *(kinda)*
 
 
@@ -28,7 +30,7 @@ The fewer unique commands the better. The fewer nested commands the more-better;
 
   * Players may increase their stats 
     * I want it to be timer-based, where the first stat is very quick, and additional stat increases take longer and longer. 
-    * may also be XP based, must spend XP to initiate the timer
+    * may also be XP based, must spend XP to initiate the timer?
 
   * attacks, defends, and other actions may be madlib'able by each player
     * eg. : 
@@ -66,6 +68,11 @@ lvl  | END | health
 20   |20   | 100     
 50   |100  | 320     
 100  |100  | 420  
+
+---|---|---|---|---|---|---|---|---
+lvl|1  |2  |2  |5  |10 |20 |50 |100
+END|1 |2 |5 |5 |20 |20 |100 |100
+health|24 |28 |34 |40 |80 |100 |320 |420
 
     * CHR
       * no fucking clue yet
@@ -123,8 +130,8 @@ lvl  | END | health
     * free health every hour/day/week?
       * command based on timer, or passive
 
-    * combat healing skill? mana? gold? xp?  
-   
+    * combat healing skill? cost mana? gold? xp?  
+
   * health vs dying
     * dying is not just 0 health, you have to un-do the death
     * avoid dying; more than just "oh my health is low, lawl whatev"
