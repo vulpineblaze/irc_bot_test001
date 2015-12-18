@@ -22,18 +22,23 @@ The fewer unique commands the better. The fewer nested commands the more-better;
  * Players will be inducted into the database upon joining the channel.
  * Players may attack other players in the channel
    * Monsters will be separate bots, not in this code base
+
  * Players earn ?gold? for winning fights
    * Spend gold on what?
+
  * Players may increase their stats 
    * I want it to be timer-based, where the first stat is very quick, and additional stat increases take longer and longer. 
    * may also be XP based, must spend XP to initiate the timer
+
  * attacks, defends, and other actions may be madlib'able by each player
    * eg. : 
      * `!q setname bloodninja`
      * `!q setattack casts lvl.9999999 lightning bolt`
      * `!q setdefend I put on my hat and wizard robe`
+
    * this opens up the option of having bots act as 'Player' to create monsters, saves a shitton of coding and complexity in this project
      * second project would be config-driven bot Monsters, might need is_monster flag in this project though for some logic
+
  * Stats are as follows:  *(this will and must change)*
    * attack , int , starts at 1
    * defense , int , starts at 1
@@ -43,8 +48,10 @@ The fewer unique commands the better. The fewer nested commands the more-better;
    * All start at 1.
    * STR
      * increases melle attack and carry weight *(is this a thing?)*
+
    * PER
      * increases ranged attack and reduces enemy def
+
    * END
      * increases health, damage
      * health = 20 + lvl\*2 + END\*2
@@ -64,11 +71,14 @@ lvl  | END | health
      * no fucking clue yet
      * increases gold? xp? 
      * not combat related? 
+
    * INT
      * no fucking clue yet
      * increase xp? lowers timer speeds?
+
    * AGI
      * slightly increases attack and increase defense
+
    * LCK
      * increases gold, crit
 
@@ -80,8 +90,10 @@ lvl  | END | health
    * min( 1, attack - defense )
    * attack =  (STR|PER)d6 + AGI + crit
      * nothing an enemy has reduces your attack
+
    * crit = min( 0 , (LCKd6)^2 - (LCKd6)^2)
      * 50% chance of zero, sliding chance of exponential
+
    * defense = enemy.ENDd6 + enemy.AGI - PERd6
      * your PER reduces enemy defense
      * this makes the game offense-heavy, but im ok with that
@@ -91,22 +103,28 @@ lvl  | END | health
    * attack + "My massive enhanced rocket-powered flaming mini-nuke mjornir of burninateing does 1 damage..."
    * melee vs ranged? just a flag? keyword driven?
      * parse for keywords, tally, and decide? have result output in stats, so Players know
+
  * skills might be cool, but no plan to implement
    * same as equipment, only worse.
    * could be limited to effect + flavor-text
    * attack + "I cast lvl.99999999 Magic Missile for 1 damage...", now you have spells
    * heal as negative attack? temporary stat-boost skill? 
+
  * Death can occur, but isnt implemented
    * dead Players should'nt be able to attack, be victim, level up, etc..
      * make sure dying is un-fun, something to be avoided
+
    * need a way to revive, continue playing
      * rez one per hour/day/week ?
      * command-based cost? auto-deduct gold? loss of xp, levels, stats?
+
  * health exists, but there is no way to regenerate it
    * free potions? find potions? buy potions?
    * free health every hour/day/week?
      * command based on timer, or passive
+
    * combat healing skill? mana? gold? xp?  
+   
  * health vs dying
    * dying is not just 0 health, you have to un-do the death
    * avoid dying; more than just "oh my health is low, lawl whatev"
