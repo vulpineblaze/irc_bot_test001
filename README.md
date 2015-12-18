@@ -48,16 +48,18 @@ The fewer unique commands the better. The fewer nested commands the more-better;
    * END
      * increases health, damage
      * health = 20 + lvl*2 + END*2
-        lvl  | END | health  
-       ------------ | -------|------
-        1    |1    | 24      
-        2    |2    |  28     
-        5    |5    | 20      
-        2    |5    | 24      
-        10   |20   | 80      
-        20   |20   | 100     
-        50   |100  | 320     
-        100  |100  | 420     
+
+lvl  | END | health  
+------------ | -------|------
+1    |1    | 24      
+2    |2    |  28     
+5    |5    | 20      
+2    |5    | 24      
+10   |20   | 80      
+20   |20   | 100     
+50   |100  | 320     
+100  |100  | 420  
+           
    * CHR
      * no fucking clue yet
      * increases gold? xp? 
