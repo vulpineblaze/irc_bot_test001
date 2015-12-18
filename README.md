@@ -58,22 +58,10 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
       * increases health, damage
       * health = 20 + lvl\*2 + END\*2
 
-lvl  | END | health  
------|-----|------
-1    |1    | 24      
-2    |2    |  28     
-5    |5    | 20      
-2    |5    | 24      
-10   |20   | 80      
-20   |20   | 100     
-50   |100  | 320     
-100  |100  | 420  
-
- | | | | | | | | 
+health|24 |28 |34 |40 |80 |100 |320 |420
 ---|---|---|---|---|---|---|---|---
 lvl|1  |2  |2  |5  |10 |20 |50 |100
 END|1 |2 |5 |5 |20 |20 |100 |100
-health|24 |28 |34 |40 |80 |100 |320 |420
 
     * CHR
       * no fucking clue yet
