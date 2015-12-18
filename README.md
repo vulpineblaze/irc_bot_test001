@@ -2,7 +2,7 @@
 gonna experiment with making a game-focused irc bot
 
 
-## Design Doc:
+## Design Doc: 
 
 ### Description:
 
