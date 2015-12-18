@@ -27,10 +27,22 @@ class Plugin(object):
         msg = ""
         if mask.nick != self.bot.nick:
             msg += 'Hi %s!' % mask.nick
+            self.func.toggle_active(mask.nick, True)
         else:
             msg+='Hi!'
-        self.bot.privmsg(channel, msg+' Use \"!help\" to see my available commands.')
+        self.bot.privmsg(channel, msg+' I\'m a mini-game! Use  !help  to see my available commands.')
 
+    @irc3.event(irc3.rfc.QUIT)
+    def good_bye(self, mask, **kw):
+        """Say good bye when someone leaves a channel"""
+        msg = ""
+        channel="#wtfomfg"
+        if mask.nick != self.bot.nick:
+            msg += 'Bye %s!' % mask.nick
+            self.func.toggle_active(mask.nick, False)
+        else:
+            msg+='Bye!'
+        self.bot.privmsg(channel, msg+" I\'ll miss you.")
 
     # @command
     # def reload(self, mask, target, args={'<words>':'Reload!'}):
@@ -49,19 +61,19 @@ class Plugin(object):
     #     """
     #     yield ' '.join(args['<message>'])
 
-    @command
-    def ec(self, mask, target, args):
-        """Ec command
-            %%ec <words>...
-        """ 
-        # self.func.test(target, "You sent in: "+' '.join(args['<words>']))
-        msg = ""
-        # msg += " mask : ".join(mask)
-        # msg += " target : ".join(target)
-        msg += " words : ".join(args['<words>'])
-        self.func.test(target, msg)
-    #     self.bot.reload('mybot_plugin')
-        # self.bot.privmsg(target, "You sent in: "+' '.join(args['<words>']))
+    # @command
+    # def ec(self, mask, target, args):
+    #     """Ec command
+    #         %%ec <words>...
+    #     """ 
+    #     # self.func.test(target, "You sent in: "+' '.join(args['<words>']))
+    #     msg = ""
+    #     # msg += " mask : ".join(mask)
+    #     # msg += " target : ".join(target)
+    #     msg += " words : ".join(args['<words>'])
+    #     self.func.test(target, msg)
+    # #     self.bot.reload('mybot_plugin')
+    #     # self.bot.privmsg(target, "You sent in: "+' '.join(args['<words>']))
 
 
     @command(permission='admin')
@@ -123,11 +135,11 @@ class Plugin(object):
 
 
 
-    @command
-    def testt(self, mask, target, args):
-        # self.func.test(target, "You sent in: "+' '.join(args['<words>']))
-        msg = ""
-        # msg += " mask : ".join(mask)
-        # msg += " target : ".join(target)
-        msg += " words : ".join(args['<words>'])
-        self.func.test(target, msg)
+    # @command
+    # def testt(self, mask, target, args):
+    #     # self.func.test(target, "You sent in: "+' '.join(args['<words>']))
+    #     msg = ""
+    #     # msg += " mask : ".join(mask)
+    #     # msg += " target : ".join(target)
+    #     msg += " words : ".join(args['<words>'])
+    #     self.func.test(target, msg)

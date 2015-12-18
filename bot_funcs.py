@@ -6,6 +6,8 @@ from random import randint
 
 User = bot_db.User
 
+THE_CHANNEL="#wtfomfg"
+
 def roll_many_dice(number):
     ret_val = 0
     for i in xrange(number):
@@ -19,14 +21,22 @@ class func(object):
         self.bot = bot 
     def test(self, target, msg):
         self.bot.privmsg(target, msg)
+
+    def toggle_active(self, nick, is_active):
+            user = self.get_or_create_user(nick)
+            user.is_active=is_active
+            user.save()
+            self.bot.privmsg(THE_CHANNEL, "toggled nick: "+nick+", to: "+str(user.is_active))
+
+
     def get_or_create_user(self, nick): 
         # self.bot.privmsg(target, msg)grandma = Person.get(Person.name == 'Grandma L.')
         try:  
             temp = User.get(User.username == nick)
-            self.bot.privmsg("#wtfomfg", "found nick: "+nick)
+            self.bot.privmsg("THE_CHANNEL", "found nick: "+nick)
         except: 
             temp = User.create(username=nick, attack=1, defense=1, health=100)
-            self.bot.privmsg("#wtfomfg", "created nick: "+nick)
+            self.bot.privmsg(THE_CHANNEL, "created nick: "+nick)
             temp.save
 
         return temp
@@ -41,10 +51,17 @@ class func(object):
         ret_val = "dummy"
         try:  
             temp = User.get(User.username == victim)
-            self.bot.privmsg("#wtfomfg", "found victim: "+victim)
-            ret_val = victim
+            # self.bot.privmsg(THE_CHANNEL, "found victim: "+victim)
+            if temp.is_active:
+                ret_val = victim
         except: 
-            self.bot.privmsg("#wtfomfg", "no such victim: "+victim+", using dummy.")
+            pass
+            # self.bot.privmsg(THE_CHANNEL, "no such victim: "+victim+", using dummy.")
+
+        if ret_val is "dummy":
+            self.bot.privmsg(THE_CHANNEL, "no such victim: "+victim+", using dummy.")
+        else:
+            self.bot.privmsg(THE_CHANNEL, "found victim: "+victim)
 
         return ret_val
 

@@ -18,6 +18,7 @@ class User(BaseModel):
     attack = IntegerField(default=1)
     defense = IntegerField(default=1)
     health = IntegerField(default=100)
+    is_active = BooleanField(default=True)
 
 class Tweet(BaseModel):
     user = ForeignKeyField(User, related_name='tweets')
