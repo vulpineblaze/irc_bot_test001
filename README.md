@@ -65,6 +65,7 @@ health|24 |28 |34 |40 |80 |100 |320 |420
 lvl|1  |2  |2  |5  |10 |20 |50 |*100* 
 END|1 |2 |5 |5 |20 |20 |*100* |*100* 
 
+    
     * CHR
       * no fucking clue yet
       * increases gold? xp? 
