@@ -57,6 +57,8 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
     * END
       * increases health, damage
       * health = 20 + lvl\*2 + END\*2
+      * possibly cap life at 100|200, but still gain END damage reduction benefits?
+        * a gang of new players should be able to bleed an ultra-high char to death
 
 health|24 |28 |34 |40 |80 |100 |320 |420
 ---|---|---|---|---|---|---|---|---
@@ -82,7 +84,7 @@ END|1 |2 |5 |5 |20 |20 |*100* |*100*
     * min( 1, Ad6 - Dd6 ) , where A and D are attack and defense
     * so A of 5 and D of 6 would become  5d6 - 6d6  , or  (5 to 30)  minus (6 to 36)
 
-  * Fighting algorithm could be:
+  * Fighting algorithm could be:   ** THIS NEEDS REWORK **
     * min( 1, attack - defense )
     * attack =  (STR|PER)d6 + AGI + crit
       * nothing an enemy has reduces your attack
@@ -93,6 +95,15 @@ END|1 |2 |5 |5 |20 |20 |*100* |*100*
     * defense = enemy.ENDd6 + enemy.AGI - PERd6
       * your PER reduces enemy defense
       * this makes the game offense-heavy, but im ok with that
+
+max(A) wo crit|7|14|32|35|130|140|650|700
+max(D) enemy similar|7|8|8|11|16|26|56|106
+max(D) enemy weak|6|12|27|30|110|120|550|600
+---|---|---|---|---|----|----|----|---
+max-crit|36|144|144|900|3600|14400|90000|360000
+AGI&LCK|1|2|2|5|10|20|50|100
+PER&END|1|2|5|5|20|20|100|100
+
 
   * Equipment might be cool, but there are no plans to implement
     * Complicates everything. Might prefer this to be flavor-text only.
@@ -124,6 +135,15 @@ END|1 |2 |5 |5 |20 |20 |*100* |*100*
   * health vs dying
     * dying is not just 0 health, you have to un-do the death
     * avoid dying; more than just "oh my health is low, lawl whatev"
+    * ultra-high chars should be significantly more expensive to rez
+      * cost = lvl*END + health  
+
+
+   cost|26 |32 |44 |65 |280|500|5.3k|10.4k
+    ---|---|---|---|---|---|---|----|---
+ health|24 |28 |34 |40 |80 |100|320 |420
+    lvl|1  |2  |2  |5  |10 |20 |50  |*100*
+    END|1  |2  |5  |5  |20 |20 |*100*|*100*
 
   * admin command only does reload right now
     * should be able to manipulate any part of any Players anything
