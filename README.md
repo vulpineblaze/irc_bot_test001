@@ -95,7 +95,7 @@ END|1 |2 |5 |5 |20 |20 |*100* |*100*
 
     * defense = enemy.ENDd6 + enemy.AGI - PERd6
       * your PER reduces enemy defense
-      * this makes the game offense-heavy, but im ok with that
+      * this makes the game offense-heavy, but im ok with that **its too heavy right now**
 
 
  | | | | | | | | | |   
