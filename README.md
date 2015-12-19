@@ -60,10 +60,10 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
       * possibly cap life at 100|200, but still gain END damage reduction benefits?
         * a gang of new players should be able to bleed an ultra-high char to death
 
-health|24 |28 |34 |40 |80 |100 |320 |420
----|---|---|---|---|---|---|---|---
-lvl|1  |2  |2  |5  |10 |20 |50 |*100*
-END|1 |2 |5 |5 |20 |20 |*100* |*100*
+health|24 |28 |34 |40 |80 |100 |320 |420 
+---|---|---|---|---|---|---|---|--- 
+lvl|1  |2  |2  |5  |10 |20 |50 |*100* 
+END|1 |2 |5 |5 |20 |20 |*100* |*100* 
 
     * CHR
       * no fucking clue yet
@@ -97,8 +97,8 @@ END|1 |2 |5 |5 |20 |20 |*100* |*100*
       * this makes the game offense-heavy, but im ok with that
 
 
- | | | | | | | | 
----|---|---|---|---|----|----|----|---
+ | | | | | | | |   
+----|----|----|----|----|----|----|----|----
 max(A) wo crit|7|14|32|35|130|140|650|700
 max(D) enemy similar|7|8|8|11|16|26|56|106
 max(D) enemy weak|6|12|27|30|110|120|550|600
