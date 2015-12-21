@@ -36,7 +36,7 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
 
 _________________________________
 
-#### Function Requirements:    *--Version 1.0.1*
+#### Function Requirements for  *Version 1.0.1*
 
 
   * Players will be inducted into the database upon joining the channel.
@@ -59,7 +59,11 @@ _________________________________
 
 ___________________________________________
 
-#### Function Requirements:    *Version 1.1.0*
+#### Function Requirements for *Version 1.1.0*
+
+  * Debug output will be toggled by some kinda of `!debug` flag
+    * sometimes I want to watch the bot work, most times I dont. 
+    * toggle boolean based on db object
 
   * Players will be inducted into the database upon joining the channel.    *--Version 1.0.1*
   * Players may attack other players in the channel     *--Version 1.0.1*
