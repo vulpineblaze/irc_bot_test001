@@ -152,26 +152,26 @@ ___________________________________________
 
   * madlib events:
     * attack
-      * <Player> <does_attack> to <Victim> who <does_defend> for X <damage> <if_die_message>
+      * `<Player> <does_attack> to <Victim> who <does_defend> for X <damage> <if_die_message>`
     * crit > attack
-      * <Player> <does_crit> for X <damage>  
+      * `<Player> <does_crit> for X <damage>  `
         * leave off defend text?
     * defend
       * covered in attack
     * die
       * covered in attack
     * heal
-      * <Player> <does_heal> for X <health>
+      * `<Player> <does_heal> for X <health>`
     * rez
-      * <Player> <does_rez>
+      * `<Player> <does_rez>`
   * madlib, new word for each stats / effect:
     * attack
-      * Increase <attack> for X <juice>? Will take X seconds|minutes|hours|days.
-      * stats: <attack>:X | <defense>:Y | <crit>:Z | ...
+      * `Increase <attack> for X <juice>? Will take X seconds|minutes|hours|days.`
+      * `stats: <attack>:X | <defense>:Y | <crit>:Z | ...`
         * or keep both?
-        * stats: attack:"<attack>":X | defense:"<defense>":Y | crit:"<crit>":Z | ...
+        * `stats: attack:"<attack>":X | defense:"<defense>":Y | crit:"<crit>":Z | ...`
         * or keep original in stats, and have separate prfile viewer?
-        * stats: attack:X | defense:Y | crit:Z | ...
+        * `stats: attack:X | defense:Y | crit:Z | ...`
     * defense
     * crit
     * level
