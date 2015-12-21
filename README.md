@@ -3,23 +3,25 @@ gonna experiment with making a game-focused irc bot
 
 
 
-## Install Instructions:
-
-// need to describe how to get a bot work for someone else
-
 ## Description:
 
 This is an irc based idle-quest minigame bot. 
 
+## Install Instructions:
+
+// need to describe how to get a bot work for someone else
+
+______________________________________________________
+
 
 ## Design Doc: 
 
-#### Current Version is:    **1.0.1**
+#### Current Version is:    __**1.0.1**__
 
 
 ### Command List:
 
-// need to put current command list and current version here
+// need to put current command list and re-iterate version here
 
 ### Design Goals:
 
@@ -34,33 +36,33 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
 
 _________________________________
 
-#### Function Requirements:    *Version 1.0.1*
+#### Function Requirements:    *--Version 1.0.1*
 
 
   * Players will be inducted into the database upon joining the channel.
   * Players may attack other players in the channel
 
-  * Stats are as follows:   *Version 1.0.1*
+  * Stats are as follows:   *--Version 1.0.1*
     * attack , int , starts at 1
     * defense , int , starts at 1
     * health , int , starts at 100
 
-  * Fighting algorithm now:      *Version 1.0.1*
+  * Fighting algorithm now:      *--Version 1.0.1*
     * max( 1, Ad6 - Dd6 ) , where A and D are attack and defense
     * so A of 5 and D of 6 would become  5d6 - 6d6  , or  (5 to 30)  minus (6 to 36)
 
-  * Death can occur, but isnt implemented     *Version 1.0.1*
+  * Death can occur, but isnt implemented     *--Version 1.0.1*
 
-  * health exists, but there is no way to regenerate it   *Version 1.0.1*
+  * health exists, but there is no way to regenerate it   *--Version 1.0.1*
 
-  * admin command only does reload right now   *Version 1.0.1*
+  * admin command only does reload right now   *--Version 1.0.1*
 
 ___________________________________________
 
 #### Function Requirements:    *Version 1.1.0*
 
-  * Players will be inducted into the database upon joining the channel.    *Version 1.0.1*
-  * Players may attack other players in the channel     *Version 1.0.1*
+  * Players will be inducted into the database upon joining the channel.    *--Version 1.0.1*
+  * Players may attack other players in the channel     *--Version 1.0.1*
     * Monsters will be separate bots, not in this code base
 
   * Players earn juice for winning fights
@@ -69,16 +71,6 @@ ___________________________________________
     * cost in juice to initiate timer
     * timedelta = (lvl)^2.8 in seconds
       * at lvl 13, increasing a stat will take 21 minutes
-
-  * attacks, defends, and other actions may be madlib'able by each player
-    * eg. : 
-      * `!q setname bloodninja`
-      * `!q setattack casts lvl.9999999 lightning bolt`
-      * `!q setdefend I put on my hat and wizard robe`
-    * make a "profile" db object, store all of the madlib text
-
-    * this opens up the option of having bots act as 'Player' to create monsters, saves a shitton of coding and complexity in this project
-      * second project would be config-driven bot Monsters, might need is_monster flag in this project though for some logic
 
   * Stats could become:   
     * attack - int, starts at 1
@@ -126,7 +118,7 @@ ___________________________________________
       * rez one per hour/day/week ?
       * command-based cost? auto-deduct gold? loss of xp, levels, stats?
 
-  * health exists, but there is no way to regenerate it   *Version 1.0.1*
+  * health exists, but there is no way to regenerate it   *--Version 1.0.1*
     * free potions? find potions? buy potions?
     * free health every hour/day/week?
       * command based on timer, or passive
@@ -137,10 +129,9 @@ ___________________________________________
     * dying is not just 0 health, you have to un-do the death
     * avoid dying; more than just "oh my health is low, lawl whatev"
     * ultra-high chars should be significantly more expensive to rez
-      * cost = lvl*END + health  
 
 
-  * admin command only does reload right now   *Version 1.0.1*
+  * admin command only does reload right now   *--Version 1.0.1*
     * should be able to manipulate any part of any Players anything
     * maybe even change say_hi and good_bye messages?
     * die command? 
@@ -148,6 +139,47 @@ ___________________________________________
   * monster commands
     * monster bots will need access to specialized admin-esque commands, to respawn and whatnot
     * implement a new command, `!monster` , check is_monster flag, hide from `!help` list
+
+
+  * **attacks, defends, and other actions may be madlib'able by each player**
+    * eg. : 
+      * `!q setname bloodninja`
+      * `!q setattack casts lvl.9999999 lightning bolt`
+      * `!q setdefend I put on my hat and wizard robe`
+    * make a "profile" db object, store all of the madlib text
+    * this opens up the option of having bots act as 'Player' to create monsters, saves a shitton of coding and complexity in this project
+      * second project would be config-driven bot Monsters, might need is_monster flag in this project though for some logic
+
+  * madlib events:
+    * attack
+      * <Player> <does_attack> to <Victim> who <does_defend> for X <damage> <if_die_message>
+    * crit > attack
+      * <Player> <does_crit> for X <damage>  
+        * leave off defend text?
+    * defend
+      * covered in attack
+    * die
+      * covered in attack
+    * heal
+      * <Player> <does_heal> for X <health>
+    * rez
+      * <Player> <does_rez>
+  * madlib, new word for each stats / effect:
+    * attack
+      * Increase <attack> for X <juice>? Will take X seconds|minutes|hours|days.
+      * stats: <attack>:X | <defense>:Y | <crit>:Z | ...
+        * or keep both?
+        * stats: attack:"<attack>":X | defense:"<defense>":Y | crit:"<crit>":Z | ...
+        * or keep original in stats, and have separate prfile viewer?
+        * stats: attack:X | defense:Y | crit:Z | ...
+    * defense
+    * crit
+    * level
+    * health
+    * damage
+    * heal
+    * rez
+    * juice
 
 ##### Equations:
 
