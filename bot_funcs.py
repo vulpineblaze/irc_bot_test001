@@ -70,24 +70,24 @@ class func(object):
 
     def do_battle(self, user, victim):
         battle_msg = ""
-        temp = self.get_or_create_user(nick)
+        vic = self.get_or_create_user(victim)
 
-        damage = roll_many_dice(user.attack) - roll_many_dice(temp.defense)
+        damage = roll_many_dice(user.attack) - roll_many_dice(vic.defense)
         if damage < 1:
             damage = 1
 
-        battle_msg += user.username +" has "+str(user.attack)+" attack against "+temp.username+"'s defense of " +str(temp.defense)
+        battle_msg += user.username +" has "+str(user.attack)+" attack against "+vic.username+"'s defense of " +str(vic.defense)
 
-        temp.health -= damage
-        if temp.health < 0:
-            temp.health = 0;
+        vic.health -= damage
+        if vic.health < 0:
+            vic.health = 0;
             # self.bot.privmsg("#wtfomfg", "no such victim: "+victim+", using dummy.")
             battle_msg += " and kills them."
         else:
             battle_msg += " and wounds them for "+str(damage)+" point of damage."
 
 
-        temp.save()
+        vic.save()
 
         return battle_msg
 

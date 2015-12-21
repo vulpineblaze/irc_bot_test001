@@ -61,6 +61,9 @@ ___________________________________________
 
 #### Function Requirements for *Version 1.1.0*
 
+  * Change the name of the bot
+    * ...
+
   * Debug output will be toggled by some kinda of `!debug` flag
     * sometimes I want to watch the bot work, most times I dont. 
     * toggle boolean based on db object
