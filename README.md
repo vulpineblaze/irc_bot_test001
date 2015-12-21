@@ -2,13 +2,26 @@
 gonna experiment with making a game-focused irc bot
 
 
-## Design Doc: 
 
-### Description:
+## Install Instructions:
+
+// need to describe how to get a bot work for someone else
+
+## Description:
 
 This is an irc based idle-quest minigame bot. 
 
-#### Design Goals:
+
+## Design Doc: 
+
+#### Current Version is:    **1.0.1**
+
+
+### Command List:
+
+// need to put current command list and current version here
+
+### Design Goals:
 
 Simple is better than complex. Complex is better than complicated.
 
@@ -18,19 +31,44 @@ The fewer unique commands the better. The fewer nested commands the more-better;
 
 Joke-Theme: Make enough of the text configurable such that this game could be MLP themed. 
 
-#### Function Requirements:  *(kinda)*
+
+_________________________________
+
+#### Function Requirements:    *Version 1.0.1*
 
 
   * Players will be inducted into the database upon joining the channel.
   * Players may attack other players in the channel
+
+  * Stats are as follows:   *Version 1.0.1*
+    * attack , int , starts at 1
+    * defense , int , starts at 1
+    * health , int , starts at 100
+
+  * Fighting algorithm now:      *Version 1.0.1*
+    * max( 1, Ad6 - Dd6 ) , where A and D are attack and defense
+    * so A of 5 and D of 6 would become  5d6 - 6d6  , or  (5 to 30)  minus (6 to 36)
+
+  * Death can occur, but isnt implemented     *Version 1.0.1*
+
+  * health exists, but there is no way to regenerate it   *Version 1.0.1*
+
+  * admin command only does reload right now   *Version 1.0.1*
+
+___________________________________________
+
+#### Function Requirements:    *Version 1.1.0*
+
+  * Players will be inducted into the database upon joining the channel.    *Version 1.0.1*
+  * Players may attack other players in the channel     *Version 1.0.1*
     * Monsters will be separate bots, not in this code base
 
-  * Players earn ?gold? for winning fights
-    * Spend gold on what?
+  * Players earn juice for winning fights
 
   * Players may increase their stats 
-    * I want it to be timer-based, where the first stat is very quick, and additional stat increases take longer and longer. 
-    * may also be XP based, must spend XP to initiate the timer?
+    * cost in juice to initiate timer
+    * timedelta = (lvl)^2.8 in seconds
+      * at lvl 13, increasing a stat will take 21 minutes
 
   * attacks, defends, and other actions may be madlib'able by each player
     * eg. : 
@@ -42,12 +80,7 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
     * this opens up the option of having bots act as 'Player' to create monsters, saves a shitton of coding and complexity in this project
       * second project would be config-driven bot Monsters, might need is_monster flag in this project though for some logic
 
-  * Stats are as follows:   *(this will and must change)*
-    * attack , int , starts at 1
-    * defense , int , starts at 1
-    * health , int , starts at 100
-
-  * Stats could become:  
+  * Stats could become:   
     * attack - int, starts at 1
       * purchased
     * defense - int, starts at 1
@@ -60,6 +93,8 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
     * health - int, starts at *(doesnt matter, non-zero default val)*
       * replaced by lvl\*2 + defense\*2 + 20 
       * cost to rez = lvl*(defense) + health
+      * current health is stored is db, max health is calculated when needed
+        * if effect makes current health > max health, then current health = max health. duh. 
     * juice
       * combo of gold and XP, reward for fighting
       * juice = max(1, 2 \* (enemy.lvl - 0.9\*your.lvl) )
@@ -68,23 +103,14 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
       * juice issued to Player upon enemy death, last hit
       * rename-able stat? all stats renameable?
 
-
-  * Fighting algorithm now:
-    * max( 1, Ad6 - Dd6 ) , where A and D are attack and defense
-    * so A of 5 and D of 6 would become  5d6 - 6d6  , or  (5 to 30)  minus (6 to 36)
-
-  * Fighting algorithm could be:   ** THIS NEEDS REWORK **
+  * Fighting algorithm could be:  
     * max(1 , A + C - D)
     * C = max(0, (crit\*3)d6 - (crit\*3)d6) 
       * slight chance of doing additional x3 damage
-   
-
 
   * Equipment might be cool, but there are no plans to implement
     * Complicates everything. Might prefer this to be flavor-text only.
     * attack + "My massive enhanced rocket-powered flaming mini-nuke mjornir of burninateing does 1 damage..."
-    * melee vs ranged? just a flag? keyword driven?
-      * parse for keywords, tally, and decide? have result output in stats, so Players know
 
   * skills might be cool, but no plan to implement
     * same as equipment, only worse.
@@ -92,7 +118,7 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
     * attack + "I cast lvl.99999999 Magic Missile for 1 damage...", now you have spells
     * heal as negative attack? temporary stat-boost skill? 
 
-  * Death can occur, but isnt implemented
+  * Death can occur, but isnt implemented      *Version 1.0.1*
     * dead Players should'nt be able to attack, be victim, level up, etc..
       * make sure dying is un-fun, something to be avoided
 
@@ -100,7 +126,7 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
       * rez one per hour/day/week ?
       * command-based cost? auto-deduct gold? loss of xp, levels, stats?
 
-  * health exists, but there is no way to regenerate it
+  * health exists, but there is no way to regenerate it   *Version 1.0.1*
     * free potions? find potions? buy potions?
     * free health every hour/day/week?
       * command based on timer, or passive
@@ -114,7 +140,7 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
       * cost = lvl*END + health  
 
 
-  * admin command only does reload right now
+  * admin command only does reload right now   *Version 1.0.1*
     * should be able to manipulate any part of any Players anything
     * maybe even change say_hi and good_bye messages?
     * die command? 
@@ -123,7 +149,7 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
     * monster bots will need access to specialized admin-esque commands, to respawn and whatnot
     * implement a new command, `!monster` , check is_monster flag, hide from `!help` list
 
-#### Equations:
+##### Equations:
 
 item|#|#|#|#|#|#|#|#|#|#
 ---|---|---|---|---|---|---|---|---|---|---

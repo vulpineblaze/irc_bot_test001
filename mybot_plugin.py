@@ -12,6 +12,8 @@ db = bot_db.db
 
 # db.create_tables([User, Tweet])
 
+VERSION = "1.0.1"
+
 
 
 @irc3.plugin
@@ -135,6 +137,10 @@ class Plugin(object):
             battle_msg = self.func.do_battle(user, victim)
             # msg += user.username + " attacks " + victim + " for Zero damage cuz devbuild. "
             self.bot.privmsg(target, battle_msg)
+
+        elif "version" in rcvd:
+            self.bot.privmsg(target, "Version is: "+VERSION)
+
 
         else:
             self.bot.privmsg(target, "I dont recognize: "+rcvd)
