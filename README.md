@@ -37,6 +37,7 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
       * `!q setname bloodninja`
       * `!q setattack casts lvl.9999999 lightning bolt`
       * `!q setdefend I put on my hat and wizard robe`
+    * make a "profile" db object, store all of the madlib text
 
     * this opens up the option of having bots act as 'Player' to create monsters, saves a shitton of coding and complexity in this project
       * second project would be config-driven bot Monsters, might need is_monster flag in this project though for some logic
@@ -46,66 +47,37 @@ Joke-Theme: Make enough of the text configurable such that this game could be ML
     * defense , int , starts at 1
     * health , int , starts at 100
 
-  * Stats could become:  *(check for trademark, although I might not care)*
-    * All start at 1.
-    * STR
-      * increases melle attack and carry weight  *(is this a thing?)*
+  * Stats could become:  
+    * attack - int, starts at 1
+      * purchased
+    * defense - int, starts at 1
+      * purchased
+    * crit - int, starts at 1
+      * purchased
+    * level - int, starts at 1
+      * anytime any other stat is purchased, this increments too
+      * juice cost to level anything = lvl*stat
+    * health - int, starts at *(doesnt matter, non-zero default val)*
+      * replaced by lvl\*2 + defense\*2 + 20 
+      * cost to rez = lvl*(defense) + health
+    * juice
+      * combo of gold and XP, reward for fighting
+      * juice = max(1, 2 \* (enemy.lvl - 0.9\*your.lvl) )
+        * juice = min( juice, your.lvl*2 )
+        * you cant get more juice from a kill than double your current level
+      * juice issued to Player upon enemy death, last hit
+      * rename-able stat? all stats renameable?
 
-    * PER
-      * increases ranged attack and reduces enemy def
-
-    * END
-      * increases health, damage
-      * health = 20 + lvl\*2 + END\*2
-      * possibly cap life at 100|200, but still gain END damage reduction benefits?
-        * a gang of new players should be able to bleed an ultra-high char to death
-
-health|24 |28 |34 |40 |80 |100 |320 |420 
----|---|---|---|---|---|---|---|--- 
-lvl|1  |2  |2  |5  |10 |20 |50 |*100* 
-END|1 |2 |5 |5 |20 |20 |*100* |*100* 
-
-    
-    * CHR
-      * no fucking clue yet
-      * increases gold? xp? 
-      * not combat related? 
-
-    * INT
-      * no fucking clue yet
-      * increase xp? lowers timer speeds?
-
-    * AGI
-      * slightly increases attack and increase defense
-
-    * LCK
-      * increases gold, crit
 
   * Fighting algorithm now:
-    * min( 1, Ad6 - Dd6 ) , where A and D are attack and defense
+    * max( 1, Ad6 - Dd6 ) , where A and D are attack and defense
     * so A of 5 and D of 6 would become  5d6 - 6d6  , or  (5 to 30)  minus (6 to 36)
 
   * Fighting algorithm could be:   ** THIS NEEDS REWORK **
-    * min( 1, attack - defense )
-    * attack =  (STR|PER)d6 + AGI + crit
-      * nothing an enemy has reduces your attack
-
-    * crit = min( 0 , (LCKd6)^2 - (LCKd6)^2)
-      * 50% chance of zero, sliding chance of exponential
-
-    * defense = enemy.ENDd6 + enemy.AGI - PERd6
-      * your PER reduces enemy defense
-      * this makes the game offense-heavy, but im ok with that **its too heavy right now**
-
-
- | | | | | | | | | |   
-----|----|----|----|----|----|----|----|----|----|----
-max(A) wo crit|7|14|32|35|130|140|650|700|----|----
-max(D) enemy similar|7|8|8|11|16|26|56|106|----|----
-max(D) enemy weak|6|12|27|30|110|120|550|600|----|----
-max-crit|36|144|144|900|3600|14400|90000|360000|----|----
-AGI&LCK|1|2|2|5|10|20|50|100|----|----
-PER&END|1|2|5|5|20|20|100|100|----|----
+    * max(1 , A + C - D)
+    * C = max(0, (crit\*3)d6 - (crit\*3)d6) 
+      * slight chance of doing additional x3 damage
+   
 
 
   * Equipment might be cool, but there are no plans to implement
@@ -142,12 +114,6 @@ PER&END|1|2|5|5|20|20|100|100|----|----
       * cost = lvl*END + health  
 
 
-   cost|26 |32 |44 |65 |280|500|5.3k|10.4k
-    ---|---|---|---|---|---|---|----|---
- health|24 |28 |34 |40 |80 |100|320 |420
-    lvl|1  |2  |2  |5  |10 |20 |50  |*100*
-    END|1  |2  |5  |5  |20 |20 |*100*|*100*
-
   * admin command only does reload right now
     * should be able to manipulate any part of any Players anything
     * maybe even change say_hi and good_bye messages?
@@ -156,5 +122,33 @@ PER&END|1|2|5|5|20|20|100|100|----|----
   * monster commands
     * monster bots will need access to specialized admin-esque commands, to respawn and whatnot
     * implement a new command, `!monster` , check is_monster flag, hide from `!help` list
+
+#### Equations:
+
+item|#|#|#|#|#|#|#|#|#|#
+---|---|---|---|---|---|---|---|---|---|---
+attack|1|2|5|10|20|50|100|20|20|60
+defense|1|2|5|10|20|50|100|20|60|20
+crit|1|2|5|10|20|50|100|60|20|20
+health|24|32|56|96|176|416|816|256|336|256
+level|1|4|13|28|58|148|298|98|98|98
+||||||||||
+cost to rez|25|40|121|376|1336|7816|30616|2216|6216|2216
+max damage no crit|0|0|0|0|0|0|0|0|-240|240
+max damage high def|0.15|0.3|0.75|1.5|3|7.5|15|9|-237|243
+max damage wo def|20|40|100|200|400|1000|2000|1000|360|640
+max damage|15|30|75|150|300|750|1500|900|60|540
+max crit|15|30|75|150|300|750|1500|900|300|300
+||||||||||
+time modifier|2.8|||||||||
+first level in seconds|1|48.50293013|1315.350174|11273.07737|86616.0515|1193253.737|8468481.428|376212.3187|376212.3187|376212.3187
+minutes|0.016666667|0.808382169|21.92250289|187.8846229|1443.600858|19887.56228|141141.3571|6270.205311|6270.205311|6270.205311
+hours|0.000277778|0.013473036|0.365375048|3.131410381|24.0600143|331.4593714|2352.355952|104.5034218|104.5034218|104.5034218
+days|1.15741E-05|0.000561377|0.01522396|0.130475433|1.002500596|13.81080714|98.01483134|4.354309244|4.354309244|4.354309244
+||||||||||
+your.lvl|1|2|5|2|10|20|20|50|100|100
+enemy.lvl|1|2|2|5|20|10|20|100|50|100
+juice|1|1|1|6.4|22|1|4|110|1|20
+
 
 

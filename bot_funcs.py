@@ -70,11 +70,7 @@ class func(object):
 
     def do_battle(self, user, victim):
         battle_msg = ""
-        try:  
-            temp = User.get(User.username == victim)
-        except: 
-            #probably dummy
-            temp = User.create(username=victim, attack=1, defense=1, health=100)
+        temp = self.get_or_create_user(nick)
 
         damage = roll_many_dice(user.attack) - roll_many_dice(temp.defense)
         if damage < 1:
