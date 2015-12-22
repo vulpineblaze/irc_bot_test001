@@ -12,6 +12,8 @@ db = bot_db.db
 
 # db.create_tables([User, Tweet])
 
+VERSION = "1.1.0"
+
 
 
 @irc3.plugin
@@ -20,13 +22,16 @@ class Plugin(object):
     def __init__(self, bot):
         self.bot = bot
         self.func = ex_func.func(bot, db)
+        self.version = VERSION
+        self.is_debug = Admin.get(version=self.bot.version).is_debug
 
     @irc3.event(irc3.rfc.JOIN)
     def say_hi(self, mask, channel, **kw):
         """Say hi when someone join a channel"""
         msg = ""
         if mask.nick != self.bot.nick:
-            msg += 'Hi %s!' % mask.nick
+            # msg += 'Hi %s!' % mask.nick
+            msg += 'Hi '+mask.nick+'!' 
             self.func.toggle_active(mask.nick, True)
         else:
             msg+='Hi!'
@@ -38,7 +43,7 @@ class Plugin(object):
         msg = ""
         channel="#wtfomfg"
         if mask.nick != self.bot.nick:
-            msg += 'Bye %s!' % mask.nick
+            msg += 'Bye '+mask.nick+'!'
             self.func.toggle_active(mask.nick, False)
         else:
             msg+='Bye!'
@@ -119,8 +124,19 @@ class Plugin(object):
             self.bot.privmsg(target, msg)
 
         self.bot.privmsg(target, "testing: "+str(args[0]))
-
-
+           
+        # if rcvd == "reload":
+        #     self.bot.privmsg(mask.nick, " ... Will now reload the bot!")
+        #     the_bot = self.bot
+        #     temp = reload(ex_func)
+        #     self.func = ex_func.func(the_bot, db)
+        #     self.bot.reload('mybot_plugin')
+        # elif rcvd == "debug_on":
+        #     self.func.toggle_debug(True)
+        # elif rcvd == "debug_off":
+        #     self.func.toggle_debug(False)
+        # else:
+        #     self.bot.privmsg(target, "I dont recognize: "+rcvd)
 
 
 
@@ -214,11 +230,4 @@ class Plugin(object):
             self.bot.privmsg(target, "I dont recognize: "+rcvd)
 
 
-    # @command
-    # def testt(self, mask, target, args):
-    #     # self.func.test(target, "You sent in: "+' '.join(args['<words>']))
-    #     msg = ""
-    #     # msg += " mask : ".join(mask)
-    #     # msg += " target : ".join(target)
-    #     msg += " words : ".join(args['<words>'])
-    #     self.func.test(target, msg)
+        
