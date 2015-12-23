@@ -9,11 +9,9 @@ import bot_funcs as ex_func
 import bot_db
 
 db = bot_db.db
-Admin = bot_db.Admin
+
 # db.create_tables([User, Tweet])
 
-
-VERSION = "1.1.0"
 
 
 @irc3.plugin
@@ -21,12 +19,7 @@ class Plugin(object):
 
     def __init__(self, bot):
         self.bot = bot
-        try:
-            self.is_debug = Admin.get(version=VERSION).is_debug
-        except:
-            self.is_debug = Admin.create(version=VERSION).is_debug
-        self.func = ex_func.func(bot, db, VERSION, self.is_debug)
-        self.func.version = self.version = VERSION
+        self.func = ex_func.func(bot, db)
 
     @irc3.event(irc3.rfc.JOIN)
     def say_hi(self, mask, channel, **kw):
@@ -51,18 +44,44 @@ class Plugin(object):
             msg+='Bye!'
         self.bot.privmsg(channel, msg+" I\'ll miss you.")
 
+    # @command
+    # def reload(self, mask, target, args={'<words>':'Reload!'}):
+    #     """Reload command
+
+    #         %%reloads the bot
+    #     """
+    #     self.bot.reload('mybot_plugin')
+    #     self.bot.privmsg(target, "You sent in: "+' '.join(args['<words>']))
+
+    # @command(permission='view')
+    # def echo(self, mask, target, args):
+    #     """Echo
+
+    #         %%echo <message>...
+    #     """
+    #     yield ' '.join(args['<message>'])
+
+    # @command
+    # def ec(self, mask, target, args):
+    #     """Ec command
+    #         %%ec <words>...
+    #     """ 
+    #     # self.func.test(target, "You sent in: "+' '.join(args['<words>']))
+    #     msg = ""
+    #     # msg += " mask : ".join(mask)
+    #     # msg += " target : ".join(target)
+    #     msg += " words : ".join(args['<words>'])
+    #     self.func.test(target, msg)
+    # #     self.bot.reload('mybot_plugin')
+    #     # self.bot.privmsg(target, "You sent in: "+' '.join(args['<words>']))
+
 
     @command(permission='admin')
     def admin(self, mask, target, args):
         """Admin command
             %%admin <words>...
-            reload - reloads the bot without restarting
-            debug_on - toggle debug text to appear
-            debug_off - toggle debug text suppression
         """ 
         rcvd = ' '.join(args['<words>'])
-        self.func.set_target(target)
-
         if not target:
             target = mask.nick
         if target == self.bot.nick:
@@ -74,15 +93,12 @@ class Plugin(object):
             self.bot.privmsg(mask.nick, " ... Will now reload the bot!")
             the_bot = self.bot
             temp = reload(ex_func)
-            self.func = ex_func.func(the_bot, db, VERSION,self.is_debug)
-            self.func.set_target(target)
+            self.func = ex_func.func(the_bot, db)
             self.bot.reload('mybot_plugin')
         elif rcvd == "debug_on":
             self.func.toggle_debug(True)
-            self.is_debug = True
         elif rcvd == "debug_off":
             self.func.toggle_debug(False)
-            self.is_debug = False
         else:
             self.bot.privmsg(target, "I dont recognize: "+rcvd)
 
@@ -90,11 +106,8 @@ class Plugin(object):
     def admin_edit(self, mask, target, args):
         """Admin_edit command
             %%admin_edit <words>...
-            user NAME stat STAT AMOUNT - where caps are the target Player and stat to set to amount
-            --eg. user jg stat juice 999999
         """ 
         rcvd = ' '.join(args['<words>'])
-        self.func.set_target(target)
 
         if not target:
             target = mask.nick
@@ -105,49 +118,7 @@ class Plugin(object):
             msg = " Command received : " + rcvd + ", from: "+target
             self.bot.privmsg(target, msg)
 
-        # self.bot.privmsg(target, "testing: "+str(args['<words>'][0]))
-        # for val in args['<words>']:
-        #     self.bot.privmsg(target, val)
-        user = "fake"
-        stat = "fake"
-        amount = -1
-        create = "fake"
-
-        for idx, val in enumerate(args['<words>']):
-            if self.is_debug:
-                self.bot.privmsg(target, "idx: "+str(idx)+", val: "+val)
-            # if val == "stat":
-                # self.bot.privmsg(target, "args['<words>']+1: "+args['<words>'][idx+1])
-            if val == "user":
-                user = args['<words>'][idx+1]
-            elif val == "stat":
-                stat = args['<words>'][idx+1]
-                amount = args['<words>'][idx+2]
-            elif val == "create": 
-                create = "create"
-            else:
-                pass
-
-        if (user != "fake") and (stat != "fake") and (amount != -1):
-            temp = self.func.get_or_create_user(user)
-            try:
-                setattr(temp, stat, int(amount))
-                temp.save()
-                msg = "Admin set user: "+user+", stat: "+stat+", amount:"+str(amount)
-                self.bot.privmsg(user, msg)
-            except:
-                self.bot.privmsg(target, "ERROR: failed setattr("+user+","+stat+","+str(amount)+")")
-        elif (user != "fake") and (create != "fake"):
-            temp = self.func.get_or_create_user(user)
-            msg = "Created user: "+user
-            if self.is_debug:
-                self.bot.privmsg(target, "DEBUG: "+mask.nick+": "+msg)
-            self.bot.privmsg(mask.nick, msg)
-        else:
-            msg = " Command malformed : " + rcvd + ", from: "+target
-            msg += "\n user: "+user+", stat: "+stat+", amount:"+str(amount)
-            self.bot.privmsg(target, msg)
-
+        self.bot.privmsg(target, "testing: "+str(args[0]))
 
 
 
@@ -160,18 +131,18 @@ class Plugin(object):
         """Q command
             %%q <words>...
             stats - Prints the stats of your character
-            attack VICTIM - you will attack the Player 
-            version - Prints the program version
-            heal - Heals your character, costs juice = hp healed
-            rez - revives your dead char. One free/day, then it costs juice
         """ 
+        # self.func.test(target, "You sent in: "+' '.join(args['<words>']))
         msg = ""
+        # msg += " mask : "+mask
+        # msg += " mask.nick : "+mask.nick
+        # msg += " target : "+target
+        # msg += " words : ".join(args['<words>'])
+        # msg += "\n"
 
         self.func.set_target(target) # target should be chan
         
         user = self.func.get_or_create_user(mask.nick)
-        self.func.validate_health(user)
-
         if not user.is_active:
             user.is_active=True
             user.save()
@@ -180,8 +151,6 @@ class Plugin(object):
 
         if rcvd == "stats":
             msg = self.func.print_stats(user)
-            if self.is_debug:
-                self.bot.privmsg(target, "DEBUG: "+mask.nick+": "+msg)
             self.bot.privmsg(mask.nick, msg)
 
         elif "attack" in rcvd:
@@ -192,29 +161,17 @@ class Plugin(object):
                 victim = self.func.validate_victim(victim)
                 battle_msg = self.func.do_battle(user, victim)
             # msg += user.username + " attacks " + victim + " for Zero damage cuz devbuild. "
-            if target != mask.nick:
-                self.bot.privmsg(mask.nick, battle_msg)
-            
             self.bot.privmsg(target, battle_msg)
-            self.bot.privmsg(victim, battle_msg)
 
         elif "version" in rcvd:
             self.bot.privmsg(target, "Version is: "+VERSION)
 
         elif "heal" in rcvd:
-            if self.func.check_if_dead(user):
-                msg = user.username+" is dead and can not attack anyone."
-            else:
-                msg = self.func.heal(user)
-
-            if self.is_debug:
-                self.bot.privmsg(target, "DEBUG: "+mask.nick+": "+msg)
+            msg = self.func.heal(user)
             self.bot.privmsg(mask.nick, msg)
 
         elif "rez" in rcvd:
             msg = self.func.rez(user)
-            if self.is_debug:
-                self.bot.privmsg(target, "DEBUG: "+mask.nick+": "+msg)
             self.bot.privmsg(mask.nick, msg)
 
         else:
@@ -230,7 +187,7 @@ class Plugin(object):
     def training(self, mask, target, args):
         """Training command
             %%training <words>...
-            STAT - trains the STAT you want (attack, defense, or crit)
+            stats - Prints the stats of your character
         """ 
         # self.func.test(target, "You sent in: "+' '.join(args['<words>']))
         msg = ""

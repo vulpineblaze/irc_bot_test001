@@ -1,9 +1,10 @@
 
 import bot_db
 from random import randint
-import datetime.datetime as datetime
-import datetime.timedelta as timedelta
-
+# import datetime.datetime as datetime
+# import datetime.timedelta as timedelta
+from datetime import datetime
+from datetime import timedelta
 # print(randint(0,9))
 
 

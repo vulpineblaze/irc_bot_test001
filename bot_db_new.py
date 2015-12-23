@@ -1,15 +1,12 @@
 
 from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
-# import datetime.datetime as datetime
-# import datetime.timedelta as timedelta
-from datetime import datetime
-from datetime import timedelta
+import datetime
 
 db = SqliteExtDatabase('my_database.db')
 db.connect()
 
-day_ago = datetime.now() - timedelta(days=2)
+
 
 
 class BaseModel(Model):
@@ -39,16 +36,16 @@ class Profile(BaseModel):
 
 class User(BaseModel):
     username = CharField(unique=True)
-    profile = CharField(default="Player")
+    profile = Profile()
     attack = IntegerField(default=1)
     defense = IntegerField(default=1)
     crit = IntegerField(default=1)
     level = IntegerField(default=1)
-    juice = IntegerField(default=100)
+    juice = IntegerField(default=1)
     health = IntegerField(default=1)
     is_active = BooleanField(default=True)
-    last_rez = DateTimeField(default=day_ago)
-    finish_training = DateTimeField(default=day_ago)
+    last_rez = DateTimeField()
+    finish_training = DateTimeField()
 
         
 
@@ -71,4 +68,4 @@ class User(BaseModel):
 
 
 
-db.create_tables([User, Admin, Profile], safe=True)
+db.create_tables([User, Admin], safe=True)

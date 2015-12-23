@@ -1,19 +1,15 @@
 
 import bot_db
 from random import randint
+import datetime.datetime as datetime
+import datetime.timedelta as timedelta
+
 # print(randint(0,9))
-from datetime import datetime
-from datetime import timedelta
+
 
 User = bot_db.User
-Profile = bot_db.Profile
-Admin = bot_db.Admin
 
 THE_CHANNEL="#wtfomfg"
-MULTIPLIER = 3.0
-EXPONENT = 2.7
-
-day_ago = datetime.now() - timedelta(days=2)
 
 def roll_many_dice(number):
     ret_val = 0
@@ -24,10 +20,9 @@ def roll_many_dice(number):
 
 
 class func(object):
-    def __init__(self, bot, db, version, is_debug):
+    def __init__(self, bot, db):
         self.bot = bot 
-        self.version = version
-        self.is_debug = is_debug
+        self.is_debug = Admin.get(version=self.bot.version).is_debug
     def test(self, target, msg):
         self.bot.privmsg(target, msg)
 
@@ -42,10 +37,9 @@ class func(object):
             self.bot.privmsg(self.target, "toggled nick: "+nick+", to: "+str(user.is_active))
 
     def toggle_debug(self, is_debug):
-        admin = Admin.get(version=self.version)
+        admin = Admin.get(version=self.bot.version)
         admin.is_debug = is_debug
         admin.save()
-        self.is_debug = is_debug
 
     def calc_juice(self, user, vic):
         juice = 2 * (vic.level - 0.9 * user.level)
@@ -67,83 +61,41 @@ class func(object):
         return cost
 
     def find_training_time_seconds(self, user):
-        seconds = (MULTIPLIER *float(user.level) ) ** EXPONENT
+        seconds = user.level ^ 2.8
         return seconds
 
     def find_training_time(self, user):
-        seconds = self.find_training_time_seconds(user)
-        dt = datetime.now() + timedelta(seconds=seconds)
-        return dt
+        seconds = find_training_time_seconds(user)
+        datetime = datetime.now() + timedelta(seconds=seconds)
+        return datetime
 
     def check_if_dead(self, user):
         ret_bool = False
-        self.validate_health(user)
         if user.health == 0:
             ret_bool = True
         return ret_bool
 
-    def validate_health(self, user):
-        max_health = self.find_max_health(user)
-
-        if user.health > max_health:
-            user.health = max_health
-            user.save()
-
-        if user.health < 0:
-            user.health = 0
-            user.save()
-
     def get_or_create_user(self, nick): 
         # self.bot.privmsg(target, msg)grandma = Person.get(Person.name == 'Grandma L.')
-        prof = self.get_or_create_profile("Player")
-        
-        # try:  
-        if self.is_debug:
-            self.bot.privmsg(self.target, "Attempting get_or_create("+nick+")...")
-
-        temp , created = User.get_or_create(username=nick)
-        
-        if created:
-            temp.profile=prof.alt_username
-            temp.attack=1
-            temp.defense=1
-            temp.crit=1
-            temp.level=1
-            temp.juice=1
-            temp.health=100
-            temp.is_active=True
-            temp.last_rez=day_ago
-            temp.finish_training=day_ago
-            temp.save()
-
+        try:  
+            temp = User.get(User.username == nick)
             if self.is_debug:
-                self.bot.privmsg(self.target, "created user: "+nick)
-        else:
+                self.bot.privmsg(self.target, "found nick: "+nick)
+        except: 
+            temp = User.create(username=nick, 
+                                attack=1, 
+                                defense=1, 
+                                crit=1, 
+                                level=1, 
+                                juice=1, 
+                                health=100, 
+                                is_active=True)
             if self.is_debug:
-                self.bot.privmsg(self.target, "found user: "+nick)
-        # except: 
-        #     self.bot.privmsg(self.target, "ERROR: builtin Profile.get_or_create("+nick+") has failed!")
-        #     temp = "FAILED!"
+                self.bot.privmsg(self.target, "created nick: "+nick)
+            temp.save
 
         return temp
 
-    #     last_rez = DateTimeField()
-    # finish_training = DateTimeField()     alt_username
-
-    def get_or_create_profile(self, name): 
-        # self.bot.privmsg(target, msg)grandma = Person.get(Person.name == 'Grandma L.')
-        # try:  
-        temp , created = Profile.create_or_get(alt_username=name)
-        if self.is_debug:
-            if created:
-                self.bot.privmsg(self.target, "created prof: "+name)
-            else:
-                self.bot.privmsg(self.target, "found prof: "+name)
-        # except: 
-        #     self.bot.privmsg(self.target, "ERROR: builtin Profile.get_or_create("+name+") has failed!")
-            
-
-        return temp
 
     def parse_victim(self, rcvd):
         s2 = "attack"
@@ -158,14 +110,13 @@ class func(object):
             if vic.is_active:
                 ret_val = victim
         except: 
-            if self.is_debug:
-                self.bot.privmsg(self.target, " ... get("+victim+") failed!")
+            pass
+            # self.bot.privmsg(self.target, "no such victim: "+victim+", using dummy.")
 
         if ret_val is "dummy":
             self.bot.privmsg(self.target, "no such victim: "+victim+", using dummy.")
         elif self.check_if_dead(vic):
             self.bot.privmsg(self.target, victim+" is dead, using dummy.")
-            ret_val = "dummy"
         else:
             if self.is_debug:
                 self.bot.privmsg(self.target, "found victim: "+victim)
@@ -190,7 +141,7 @@ class func(object):
         if vic.health < 0:
             vic.health = 0;
             # self.bot.privmsg("#wtfomfg", "no such victim: "+victim+", using dummy.")
-            user.juice += self.calc_juice(user, vic)
+            user.juice = calc_juice(user, vic)
             user.save()
             battle_msg += " and kills them."
         else:
@@ -211,14 +162,14 @@ class func(object):
             out_msg = "You are at full health."
         elif user.juice < missing_health:
             new_miss_health = user.juice
-            out_msg = "You only have "+str(new_miss_health)+" juice, and so you'll only get that much health."
+            out_msg = "You only have "+new_miss_health+" juice, and so you'll only get that much health."
             user.juice = 0
             user.health += new_miss_health
             user.save()
         # elif:
         #     pass
         else:
-            out_msg = "Now healing "+str(missing_health)+" health."
+            out_msg = "Now healing "+missing_health+" health."
             user.juice -= missing_health
             user.health += missing_health
             user.save()
@@ -229,8 +180,8 @@ class func(object):
     def rez(self, user):
         max_health = self.find_max_health(user)
         out_msg = ""
-        cost = self.find_rez_cost(user)
-        if not self.check_if_dead(user):
+        cost = find_rez_cost(user)
+        if self.check_if_dead(user):
             out_msg = "You are not dead."
             return out_msg
 
@@ -240,9 +191,9 @@ class func(object):
             user.health = max_health
             user.save()
         elif user.juice < cost:
-            out_msg = "You need "+str(cost)+" to rez, but only have "+str(user.juice)
+            out_msg = "You can't afford to rez."
         else:
-            out_msg = "You paid "+str(cost)+" to rez!"
+            out_msg = "You got rez'd!"
             user.juice -= cost
             user.health = max_health
             user.save()
@@ -251,7 +202,7 @@ class func(object):
 
 
     def print_stats(self, user):
-        prof = self.get_or_create_profile(user.profile)
+        prof = user.profile
         out_msg = "Your profile is: "+prof.alt_username
         out_msg += "\n | attack:"+prof.attack+":"+str(user.attack)
         out_msg += "\n | defense:"+prof.defense+":"+str(user.defense)
@@ -268,14 +219,13 @@ class func(object):
 
     def train_stat(self, user, stat):
 
-        # time_diff = (user.finish_training - datetime.now()).seconds
-        if user.finish_training > datetime.now():
+        if user.finish_training - datetime.now() > 0:
             out_msg = "You cannot train until: "+str(user.finish_training)
             return out_msg
 
-        # if user.finish_training - datetime.now() > 0:
-        #     out_msg = "You cannot train until: "+str(user.finish_training)
-        #     return out_msg
+        if user.finish_training - datetime.now() > 0:
+            out_msg = "You cannot train until: "+str(user.finish_training)
+            return out_msg
         
         if stat == "attack":
             num_stat = user.attack
@@ -287,7 +237,7 @@ class func(object):
             out_msg = "Stat: "+str(num_stat)+" not recognized. This msg should never happen!"
             return out_msg
 
-        cost = self.find_level_cost(user, num_stat)
+        cost = find_level_cost(user, num_stat)
         if user.juice < cost:
             out_msg = "You don't have enough juice to level. Has: "+str(user.juice)+" Need:"+str(cost)
             return out_msg
@@ -304,15 +254,17 @@ class func(object):
 
         user.juice -= cost
         user.level += 1
-        user.health = self.find_max_health(user)
+        user.health = find_max_health(user)
         num_stat += 1
 
-        out_msg = "Spent "+str(cost)+" juice and increased "+stat+" to "+str(num_stat)
+        out_msg = "Spent "+str(cost)+" juice and increased "+stat+" to "+num_stat
         # seconds = level
-        user.finish_training = self.find_training_time(user)
+        user.finish_training = find_training_time(user)
 
         user.save()
 
         return out_msg
 
 
+#         now = datetime.datetime.now()
+# now_plus_10 = now + datetime.timedelta(minutes = 10)
